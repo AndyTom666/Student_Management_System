@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="js/jquery-2.2.4.min.js"></script>
+<title>学生注册</title>
+<style type="text/css">
+	button{
+		height: 36px;
+		width: 100px;
+		color:rgba(73, 42, 30, 0.836);
+		background-color:darkturquoise;
+		border-color: rgba(117, 85, 15, 0.822);
+	}
+	</style>
+<script type="text/javascript">
+function getstuid()
+    {
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "getnewstuid.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText==null)
+  			      {
+  			      alert("获取学号失败")
+  			    	  }else if(xmlhttp.responseText!=null)
+  			    		  {
+					  var stuid=xmlhttp.responseText;
+					  document.getElementById("stuid").value=stuid
+  			    	  //alert("注册学生成功");
+  			    	//window.location.href="login.html";
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send();
+    }
+ function studentregister()
+    {
+    	stuid=document.getElementById("stuid").value;
+    	stuname=document.getElementById("stuname").value;
+    	pwd=document.getElementById("pwd").value;
+    	professionid=document.getElementById("professionid").value;
+    	date=document.getElementById("date").value;
+    	var sexradio = document.getElementsByName("sex");
+    	if (sexradio[0].checked) {
+    		sex=0;
+    	} else if (sexradio[1].checked) {
+    		sex=1;
+    	} 
+    	idnum=document.getElementById("idnum").value;
+    	totalscore=document.getElementById("totalscore").value;
+    	photourl=document.getElementById("photourl").value;
+    	note=document.getElementById("note").value;
+    	
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "studentregister.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText=="no")
+  			      {
+  			      alert("注册学生失败！")
+  			    	  }else if(xmlhttp.responseText=="yes")
+  			    		  {
+  			    	  alert("注册学生成功");
+						
+  			    	window.location.href="login.html";
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send("stuid="+stuid+"&stuname="+stuname+"&pwd="+pwd+"&professionid="+professionid+"&date="+date
+  			   +"&sex="+sex+"&idnum="+idnum+"&totalscore="+totalscore+"&photo="+photourl+"&note="+note);
+    }
+	function gettext1()
+	{
+		value=document.getElementById("stuname").value;
+    	document.getElementById("displaybox").innerHTML=value;
+	}
+	function CharMode() {
+		pwd=document.getElementById("pwd").value;
+		//alert(pwd.length);
+		count=0;
+		for(i=0;i<pwd.length;i++)
+		{
+			iN=pwd.charCodeAt(i);
+			
+        	if (iN >= 48 && iN <= 57){
+			 //数字  
+			 	if(count<1){
+					count=1;
+			 }	
+		}
+			if (iN >= 97 && iN <= 122) 
+			{   
+				if(count<2)
+				{
+					count=2;
+				}                                   //小写  		
+		}
+        if (iN >= 65 && iN <= 90){
+			 //大写
+			 if(count<3){
+				 count=3;
+			 }          
+		}
+		
+	}
+
+	document.getElementById("displaybox").innerHTML="密码是"+pwd+"现在是"+count+"级强度密码";
+
+        
+    }
+	function checkpwd()
+	{
+		pwd1=document.getElementById("pwd").value;
+		pwd2=document.getElementById("pwd2").value;
+		if(pwd2!=pwd)
+		{
+			alert("两次输入密码不一致请重新输入");
+		}
+	}
+	
+   	    
+    
+
+ </script>
+</head>
+<body background="image/12.jpeg" 
+	style=" background-repeat:no-repeat;background-size:110% 120%;attachment: fixed; background-size: cover;" onload="getstuid()">
+<br><br><br><br><br><br>
+	   <h1 align="center">学生注册<br>
+		<div id="displaybox" ></div>
+		<br>
+		  学号:<input type="text" id="stuid"  required="required"   value="" readonly/><br/>
+		 名字:<input type="text" id="stuname" required="required"/><br/>
+		  密码：<input type="password" id="pwd" required="required" value="123" onKeyUp="CharMode()" onblur="CharMode()"><br/>
+		  二次确认密码：<input type="password" id="pwd2" required="required" value="123" onblur="checkpwd()"><br/>
+		  专业号：<select required="required" id="professionid">
+    		<option  value="p01">p01 计算机控制</option>
+    		<option  value="p02">p02 网络安全</option>
+    		<option  value="p03">p03 计算机应用</option>
+ 					 </select><br>
+		 入学日期:<input type="date" id="date" required="required">
+		 
+		 <br>
+		  性别:<input type="radio" name="sex" id="sex1" value="male">Male
+			<input type="radio" name="sex"  id="sex2" value="female">Female<br>
+		  身份证号:<input type="text" id="idnum" required="required" onblur="checkidnum()"><br>
+		 身份证验证： <input type="text" id="checkidnum"  value="" readonly/>
+		  <script>
+			  function checkidnum()
+			  {
+				idnum=document.getElementById("idnum").value;
+				var p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+				
+   				if(p.test(idnum)==true)
+				   {
+					var year = idnum.substring(6, 10);
+        			var month = idnum.substring(10, 12);
+       				var date = idnum.substring(12, 14);
+       				var date2 = year+"-"+month+"-"+date;
+					document.getElementById("checkidnum").value=date2;
+					   alert("身份证号码格式正确!");
+				   }
+				   else
+				   {
+					alert("身份证号码格式错误!");
+				   } 
+			  }
+		  
+			</script>
+		  <br>总分:<input type="text" id="totalscore" required="required"><br>
+		  照片:<div id="photoshow"></div><br>
+		  <input type="hidden"  id="photourl" />
+		 说明:<input type="text" id="note" value="I'm a good student"><br>
+		 <form id="uploadForm" enctype="multipart/form-data">
+    文件:<input id="file" type="file" name="file"/>
+</form>
+<button id="upload">上传文件</button>
+<br>
+		 <button onclick="studentregister()"> 学生注册 </button>
+		 
+		  <br>
+		  
+		
+		</form>
+		<a href="login.html">返回首页</a>
+
+</body>
+<script type="text/javascript">
+    $(function () {
+        $("#upload").click(function () {
+            var formData = new FormData($('#uploadForm')[0]);
+            $.ajax({
+                type: 'post',
+                url: "file/upload.do",
+                data: formData,
+                cache: false,
+                processData: false,
+                contentType: false,
+            }).success(function (data) {
+
+                alert("文件上传成功！");
+                //alert(data)
+				document.getElementById("photoshow").innerHTML="<img src="+data+"  width=7% height=3%>";
+				document.getElementById("photourl").value=data;
+            }).error(function () {
+                alert("上传失败");
+            });
+        });
+    });
+</script>
+</html>

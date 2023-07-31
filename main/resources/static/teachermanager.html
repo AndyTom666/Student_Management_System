@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>老师管理界面(管理员权限)</title>
+<style type="text/css">
+	body {
+			margin:0px auto;
+		}
+		#fixedLayer1 {
+			position:fixed;
+			left: 20px;
+			top: 400;
+			width:150;
+			line-height:4;
+			background-color: rgba(41, 198, 209, 0.705); 
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+		#fixedLayer2 {
+			position:fixed; 
+			right:20px;
+			top: 200;
+			width:150;
+			background-color: rgba(41, 198, 209, 0.705);
+			line-height:4;
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+	button{
+		height: 36px;
+		width: 100px;
+		color:rgba(73, 42, 30, 0.836);
+		background-color:#577ac5;
+		border-color: rgba(117, 85, 15, 0.822);
+	}
+	</style>
+<style type="text/css">
+button{
+	height: 36px;
+	width: 100px;
+	color:rgba(73, 42, 30, 0.836);
+	background-color:darkturquoise;
+	border-color: rgba(117, 85, 15, 0.822);
+}
+</style>
+<script type="text/javascript">
+function getallteacher()
+{
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getallteacher.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("teachers").innerHTML = display(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send();
+}
+function display(json) {
+		content = "<table border='1' align='center' style='color:rgb(100, 215, 300)'><td>老师编号</td><td>老师名字</td><td>密码</td><td>专业号</td><td>权限</td><td>操作（删除)</td><td>操作（更新）</td>";
+		for (i = 0; i < json.length; i++) {
+			content += "<tr style='color:rgb(100, 215, 300)'><td>" + json[i].teacherid + "</td>";
+			content += "<td>" + json[i].teachername + "</td>";
+			content += "<td>" + json[i].pwd + "</td>";
+			content += "<td>" + json[i].professionid + "</td>";
+			content += "<td>" + json[i].role + "</td>";
+			content += "<td><button onclick='deleteteacher(\"" + json[i].teacherid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updateteacher.html?" 
+					+json[i].teacherid+ "'><button>修改</a></button></td></tr>";
+
+		}
+		 content+="</table>";
+
+		return content;
+	}
+	function deleteteacher(teacherid) {
+		if (!confirm("确定要删除老师编号为：" + teacherid + " 的老师信息吗?"))
+			return;
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","deleteteacher.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("删除成功！");
+					getallteacher();
+				} else
+					alert("删除失败！");
+
+			}
+
+		}
+		 xmlhttp.setRequestHeader("Content-type",
+		  	"application/x-www-form-urlencoded");
+		xmlhttp.send("teacherid="+teacherid);
+	}
+
+</script>
+</head>
+<body onload="getallteacher()" background="image/10.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 220%;attachment: fixed; background-size: cover;">
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+<h1 align="center" style="color: rgb(13, 30, 126)">老师管理</h1>
+<div id="teachers"></div>
+<br><br><br>
+<table align="center">
+<tr><td><h1><a href="register.html"><button  onclick="alert('welecome to njupt')" type="button">新生注册</button></a></h1>
+	</td><td><h1 ><a href="studentmanager.html"><button  onclick="alert('welecome to student manager system')" type="button">学生管理</button></a></h1></td>
+		<td><h1 ><a href="stumarkinfo.html"><button  onclick="alert('welecome to grade manager system')" type="button">学生成绩管理</button></a></h1></td>
+			<td>
+				<h1 ><a href="teacherregister.html"><button  onclick="alert('welecome to teacher register page')" type="button">老师注册</button></a></h1></td>
+				<td>
+					<h1><a href="courseregister.html"><button  onclick="alert('welecome to course register page')" type="button">课程录入</button></a></h1></td>
+		</tr>
+		<tr>
+			<td>
+				<h1><a href="stumarkinforegister.html"><button  onclick="alert('welecome to stumarkinfo register page')" type="button">学生成绩录入</button></a></h1>
+			</td>
+
+		</tr>
+</table>
+
+<a href="login.html"><h1 align="center">返回首页</h1></a>
+
+
+	
+
+
+</body>
+</html>

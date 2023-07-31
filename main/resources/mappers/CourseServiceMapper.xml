@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhuang.mapper.CourseServiceMapper">
+	<select id="getCount" resultType="int">
+		select count(*) from course
+	</select>
+	<select id="queryAll" resultType="Course">
+		select * from course
+	</select>
+	<insert id="saveCourse"  parameterType="Course" >
+		insert into course(courseid,coursename,professionid,ratio,credit)
+		values(#{courseid},#{coursename},#{professionid},#{ratio},#{credit})
+	  </insert>
+	  <update id="updateAccount" parameterType="Course" >
+	  update course set coursename=#{coursename},professionid=#{professionid},ratio=#{ratio},
+	  credit=#{credit} where courseid=#{courseid}
+	  </update>
+	  <select id="querySelectedCourse" parameterType="String" resultType="Course">
+		select * from course where courseid=#{courseid}
+	  </select>
+	  <delete id="deleteCourse" parameterType="String">
+	  	delete from course where courseid=#{courseid}
+	  </delete>
+
+</mapper>

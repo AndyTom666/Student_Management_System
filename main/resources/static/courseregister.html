@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>课程录入</title>
+<script type="text/css">
+	body {
+		margin:0px auto;
+	}
+	#fixedLayer1 {
+		position:fixed;
+		left: 20px;
+		top: 400;
+		width:150;
+		line-height:4;
+		background-color: rgba(41, 198, 209, 0.705); 
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+	#fixedLayer2 {
+		position:fixed; 
+		right:20px;
+		top: 200;
+		width:150;
+		background-color: rgba(41, 198, 209, 0.705);
+		line-height:4;
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+</script>
+<script type="text/javascript">
+ function courseregister()
+    {
+    	courseid=document.getElementById("courseid").value;
+    	coursename=document.getElementById("coursename").value;
+    	professionid=document.getElementById("professionid").value;
+    	ratio=document.getElementById("ratio").value;
+		credit=document.getElementById("credit").value;
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "courseregister.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText=="no")
+  			      {
+  			      alert("注册课程失败！")
+  			    	  }else if(xmlhttp.responseText=="yes")
+  			    		  {
+  			    	  alert("注册课程成功");
+  			    	window.location.href="success2.html";
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send("courseid="+courseid+"&coursename="+coursename+"&professionid="+professionid+"&ratio="+ratio+"&credit="+credit);
+    }
+ </script>
+</head>
+<body background="image/5.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 200%;attachment: fixed; background-size: cover;">
+		<br><br><br><br><br><br><br><br>
+	   <h1 align="center">课程录入<br>
+		  课程号:<input type="text" id="courseid"  required="required" autofocus><br>
+         课程名:<input type="text" id="coursename" required="required"><br>
+         专业号：<select required="required" id="professionid">
+            <option  value="p01">p01 计算机控制</option>
+            <option  value="p02">p02 网络安全</option>
+            <option  value="p03">p03 计算机应用</option>
+          </select><br>
+		  平时分比例:<input type="number" id="ratio" step="0.1" min="0" max="1"><br>
+		  学分:  <select required="required" id="credit">
+            <option  value="1">1学分</option>
+            <option  value="2">2学分</option>
+            <option  value="3">3学分</option>
+            <option  value="4">4学分</option>
+            <option  value="5">5学分</option>
+            <option  value="6">6学分</option>
+		  </select>
+		  <br>
+		 <button onclick="courseregister()">录入课程 </button>
+		 
+		 <br>
+		
+		
+		<a href="login.html">返回首页</a>
+
+</body>
+</html>

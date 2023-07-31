@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhuang.mapper.StuMarkInfoServiceMapper">
+
+	<select id="getCount" resultType="int">
+		select count(*)from stumarkinfo
+	</select>
+	<delete id="deleteMany" parameterType="String">
+    delete from  stumarkinfo  where markid IN
+    <foreach collection="array" item="markid" open="(" separator="," close=")">
+        #{markid}
+    </foreach>
+</delete>
+	<!-- <delete id="deleteMany" parameterType="String[]">
+		delete * from stumarkinfo where markid in (tobedelete)
+	</delete> -->
+	<select id="queryAll" resultType="StuMarkInfo">
+		select * from stumarkinfo
+	</select>
+	<insert id="saveStuMarkInfo"  parameterType="StuMarkInfo" >
+		insert into stumarkinfo(markid,stuid,courseid,basescore,testscore,finalscore,adddate,note)
+		values(#{markid},#{stuid},#{courseid},#{basescore},#{testscore},#{finalscore},#{adddate},#{note})
+	  </insert>
+	  <update id="updateStuMarkInfo" parameterType="StuMarkInfo" >
+	  update stumarkinfo set stuid=#{stuid},courseid=#{courseid},basescore=#{basescore},
+	  testscore=#{testscore},finalscore=#{finalscore},adddate=#{adddate},note=#{note} where markid=#{markid}
+	  </update>
+	  <select id="querySelectedStuMarkInfo" parameterType="String" resultType="StuMarkInfo">
+		select * from stumarkinfo where markid=#{markid}
+	  </select>
+	  <delete id="deleteStuMarkInfo" parameterType="String">
+	  	delete from stumarkinfo where markid=#{markid}
+	  </delete>
+	  <select id="getTotalScore" resultType="StudentScore">
+	  select stuid,sum(finalscore)as totalscore from stumarkinfo group by stuid
+	  </select>
+	  <select id="getMaxMarkid" resultType="String">
+	  		select max(markid)from stumarkinfo
+	  </select>
+	 <select id="getSelectedCourse" parameterType="String" resultType="StuMarkInfo">
+		 select stumarkinfo.*,course.coursename from stumarkinfo,course where stuid=#{stuid} and stumarkinfo.courseid=course.courseid
+	 </select>
+
+</mapper>

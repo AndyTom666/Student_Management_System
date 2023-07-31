@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="test4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/com/yanzhuang/test4/sExpressionEquation.zip!/" />
+      <root url="jar://$PROJECT_DIR$/com/yanzhuang/test4/sExpressionEquation.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

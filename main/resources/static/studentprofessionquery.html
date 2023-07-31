@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</style>
+<script type="text/css">
+	body {
+		margin:0px auto;
+	}
+	#fixedLayer1 {
+		position:fixed;
+		left: 20px;
+		top: 400;
+		width:150;
+		line-height:4;
+		background-color: rgba(41, 198, 209, 0.705); 
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+	#fixedLayer2 {
+		position:fixed; 
+		right:20px;
+		top: 200;
+		width:150;
+		background-color: rgba(41, 198, 209, 0.705);
+		line-height:4;
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+</script>
+<script type="text/javascript">
+	function getstudentbyprofession() {
+        professionid=document.getElementById("getprofessionid").value;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getstudentbyprofession.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("stus").innerHTML = display(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send("professionid="+professionid);
+		// alert(sno);
+	}
+	function display(json) {
+		content = "<table border='1' align='center' style='color: darkturquoise'><td>学号</td><td>姓名</td><td>密码</td><td>专业号</td><td>权限</td><td>入学日期</td><td>性别</td><td>身份证号</td><td>总分</td><td>照片</td><td>标记</td><td>操作(删除)</td><td>操作(更新)</td>";
+		for (i = 0; i < json.length; i++) {
+			content += "<tr style='color: darkturquoise'><td>" + json[i].stuid + "</td>";
+			content += "<td>" + json[i].stuname + "</td>";
+			content += "<td>" + json[i].pwd + "</td>";
+			content += "<td>" + json[i].professionid + "</td>";
+			content += "<td>" + json[i].role + "</td>";
+			content += "<td>" + json[i].date + "</td>";
+			content += "<td>" + json[i].sex + "</td>";
+			content += "<td>" + json[i].idnum + "</td>";
+			content += "<td>" + json[i].totalscore + "</td>";
+			content += "<td>" + json[i].photo + "</td>";
+			content += "<td>" + json[i].note + "</td>";
+			content += "<td><button onclick='deleteStu(\"" + json[i].stuid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatestudent.html?" + json[i].stuid
+					+ "'><button>修改</a></button></td></tr>";
+
+		}
+		 content+="</table>";
+
+		return content;
+	}
+
+	function deleteStu(stuid) {
+		if (!confirm("确定要删除学号为：" + stuid + " 的学生信息吗?"))
+			return;
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","deletestudent.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("删除成功！");
+					getallstudent();
+				} else
+					alert("删除失败！");
+
+			}
+
+		}
+		 xmlhttp.setRequestHeader("Content-type",
+		  	"application/x-www-form-urlencoded");
+		xmlhttp.send("stuid="+stuid);
+	}
+</script>
+</head>
+<body  background="image/13.jpg"
+	style="background-repeat: no-repeat; background-size: 110% 330%; attachment:fixed; background-size: cover;">
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+    <h1 align="center" style="color: rgb(66, 167, 26)">学生管理界面</h1>
+   <p align="center"> <select id="getprofessionid" >
+        <option value="p01">p01计算机控制</option>
+        <option value="p02">p02网络安全</option>
+        <option value="p03">p03计算机应用</option>
+    </select>
+    <button onclick="getstudentbyprofession()">查询此专业所有学生</button></p>
+    <br>
+	<div id="stus"></div>
+
+</body>
+</html>

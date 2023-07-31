@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhuang.mapper.StudentServiceMapper">
+		<select id="getCount" resultType="int">
+			select count(*)from student
+		</select>
+      <select id="queryAll"  resultType="Student">
+		select student.*,profession.professionname from student,profession where student.professionid=profession.professionid
+	  </select>
+	  <select id="querySelectedStudent" parameterType="String" resultType="Student">
+	  	select student.*,profession.professionname from student,profession where stuid=#{stuid}
+	  	and student.professionid=profession.professionid 
+	  </select>
+	  <select id="querySelectedUser" parameterType="String" resultType="Student">
+		select * from student where stuid=#{stuid}
+	  </select>
+	   <insert id="saveStudent"  parameterType="Student" useGeneratedKeys="false" keyProperty="stuid">
+		insert into Student(stuid,stuname,pwd,professionid,role,date,sex,idnum,totalscore,
+		photo,note)values(#{stuid},#{stuname},#{pwd},#{professionid},#{role},#{date},#{sex},#{idnum},#{totalscore},
+		#{photo},#{note})
+	  </insert>
+	  <update id="updateAccount" parameterType="Student" >
+	  update student set stuname=#{stuname},pwd=#{pwd},professionid=#{professionid},date=#{date},sex=#{sex},idnum=#{idnum},
+	  totalscore=#{totalscore},photo=#{photo},note=#{note} where stuid=#{stuid}
+	  </update>
+	  <delete id="deleteAccount" parameterType="String">
+	  	delete from student where stuid=#{stuid}
+	  </delete>
+	  <select id="getMaxStuid" resultType="String">
+	   			select max(stuid)from student
+	  </select>
+	  <select id="queryAllByProfessionid" parameterType="String" resultType="Student">
+	  	select * from student where professionid=#{professionid}
+	  </select>
+	  <select id="queryVagueUser" parameterType="String" resultType="Student">
+	  	select * from student where stuname like "%" #{stuname} "%"
+	  </select>
+
+	<!--<select id="queryVagueUser" parameterType="String" resultType="Student">
+		select * from student where stuname like '%"#{stuname}"%'
+	</select>-->
+
+	  <update id="updateTotalScore" parameterType="StudentScore">
+	  		update student set totalscore=#{totalscore} where stuid=#{stuid}
+	  </update>
+	  <!--  <select id="loginStu" parameterType="Student" resultType="Student">
+	    select * from student where sno=#{sno} and pwd=#{pwd}
+	  </select> -->
+	<!--  select * from userinfo where userID=? and pwd=?  -->
+
+
+
+</mapper>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>课程管理界面(管理员权限)</title>
+<style type="text/css">
+body {
+		margin:0px auto;
+	}
+	#fixedLayer1 {
+		position:fixed;
+		left: 20px;
+		top: 400;
+		width:150;
+		line-height:4;
+		background-color: rgba(41, 198, 209, 0.705); 
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+	#fixedLayer2 {
+		position:fixed; 
+		right:20px;
+		top: 200;
+		width:150;
+		background-color: rgba(41, 198, 209, 0.705);
+		line-height:4;
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+button{
+	height: 36px;
+	width: 100px;
+	color:rgba(73, 42, 30, 0.836);
+	background-color:darkturquoise;
+	border-color: rgba(117, 85, 15, 0.822);
+}
+</style>
+<script type="text/javascript">
+var pagenum=1;
+function getallcourse()
+{
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getcoursepageinfo.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("course").innerHTML = display(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send("pagenum="+pagenum);
+}
+function display(json) {
+		content = "<table border='1' align='center' style='color:rgb(100, 215, 300)'><td>课程编号</td><td>课程名</td><td>专业编号</td><td>平时成绩占比</td><td>学分</td><td>操作（删除)</td><td>操作（更新）</td>";
+		for (i = 0; i < json.length; i++) {
+			content += "<tr style='color:rgb(100, 215, 300)'><td>" + json[i].courseid + "</td>";
+			content += "<td>" + json[i].coursename + "</td>";
+			content += "<td>" + json[i].professionid + "</td>";
+			content += "<td>" + json[i].ratio + "</td>";
+			content += "<td>" + json[i].credit + "</td>";
+			content += "<td><button onclick='deletecourse(\"" + json[i].courseid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatecourse.html?" 
+					+json[i].courseid+ "'><button>修改</a></button></td></tr>";
+
+		}
+		 content+="</table>";
+
+		return content;
+	}
+	function deletecourse(courseid) {
+		if (!confirm("确定要删除课程编号为：" + courseid + " 的课程信息吗?"))
+			return;
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","deletecourse.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("删除成功！");
+					getallcourse();
+				} else
+					alert("删除失败！");
+
+			}
+
+		}
+		 xmlhttp.setRequestHeader("Content-type",
+		  	"application/x-www-form-urlencoded");
+		xmlhttp.send("courseid="+courseid);
+	}
+	function nextpage()
+	{
+		pagenum++;
+		getallcourse();
+	}
+	function previouspage()
+	{
+		pagenum--;
+		f(pagenum<=0)
+		{
+			pagenum=1;
+		}
+		getallcourse();
+	}
+	function inputpage()
+	{
+		pagenum=document.getElementById("numofpage").value;
+		getallcourse();
+	}
+	function main()
+	{
+		getpage();
+		getallcourse();
+	}
+
+
+</script>
+</head>
+<body onload="getallcourse()" background="image/9.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 220%;attachment: fixed; background-size: cover;">
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+<h1 align="center" style="color: rgb(13, 126, 38)">课程管理</h1>
+<div id="course"></div>
+<br><br><br>
+<table align="center">
+<tr></td><td><h1 ><button  onclick="previouspage()" type="button">上一页</button></h1></td>
+	<td><h1 ><button  onclick="nextpage()" type="button">下一页</button></h1></td>
+	<td>
+	<input type="text" id="numofpage"/><button  onclick="inputpage()" type="button">跳转页面</button></a></h1></td>
+	<td>
+			<td>
+				<h1 ><a href="teacherregister.html"><button  onclick="alert('welecome to teacher register page')" type="button">老师注册</button></a></h1></td>
+				<td>
+					<h1><a href="courseregister.html"><button  onclick="alert('welecome to course register page')" type="button">课程录入</button></a></h1></td>
+		</tr>
+		<tr>
+			<td>
+				<h1><a href="stumarkinforegister.html"><button  onclick="alert('welecome to stumarkinfo register page')" type="button">学生成绩录入</button></a></h1>
+			</td>
+
+		</tr>
+</table>
+
+<a href="login.html"><h1 align="center">返回首页</h1></a>
+
+
+	
+
+
+</body>
+</html>

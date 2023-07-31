@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="js/jsencrypt.min.js"></script>
+	<script src="js/crypto-js.min.js"></script>
+</head>
+<meta charset="UTF-8">
+<style type="text/css">
+	button{
+		height: 20px;
+		width: 50px;
+		color:rgba(33, 87, 167, 0.836);
+		background-color: rgba(96, 201, 70, 0.63);
+		border-color: rgba(26, 136, 12, 0.822);
+	}
+	</style>
+
+
+<script type="text/javascript">
+	var publicKey = "";  // 公钥
+	var sessionId = "";
+    function getPublicKey() {
+        if (window.XMLHttpRequest) {
+            xmlhttp=new XMLHttpRequest();
+        } else {
+            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("GET", "getpublickey.do", true);
+        xmlhttp.onreadystatechange=function() {
+            if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                var response = JSON.parse(xmlhttp.responseText);
+        		publicKey = response.publicKey;
+				sessionId = response.sessionId;
+            }
+        }
+        xmlhttp.send();
+    }
+	function checkduplicatestuid()
+	{
+		stuid=document.getElementById("stuid").value;
+		if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "checkduplicatestuid.do", false);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+				if(xmlhttp.responseText == "yes")
+				{
+					if(confirm("此账户已经有人登陆,是否需要再次登陆？"))
+					{
+						pwd1=document.getElementById("pwd").value;
+						var pwd2 = prompt("为了完成身份验证请再次输入你的密码："); 
+						if(!pwd2.equals(pwd1))
+						{
+							alert("身份验证失败");
+							window.location.href="login.html";
+						}
+					}else
+					{
+						window.location.href="login.html";
+					}
+
+					
+				}
+  			   }   
+  	   }
+		 
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send("stuid="+stuid);
+	}
+    function login() {
+    	stuid=document.getElementById("stuid").value;
+    	pwd=document.getElementById("pwd").value;
+		var desKeyHex = CryptoJS.lib.WordArray.random(64/8).toString(CryptoJS.enc.Hex);
+		var desKey = CryptoJS.enc.Hex.parse(desKeyHex);
+		var encrypted = CryptoJS.DES.encrypt(pwd, desKey, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+		var encryptedPwd = CryptoJS.DES.encrypt(pwd, desKey,{ mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 }).toString(); // 使用 DES 密钥加密密码
+		var encrypt = new JSEncrypt();
+		encrypt.setPublicKey(publicKey);
+		var encryptedDesKey = encrypt.encrypt(desKeyHex); // 加密 DES 密钥
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "login.do", false);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			 	loginvo=xmlhttp.responseText;
+  			 	json=eval("("+loginvo+")");
+  			      if(json.message=="welcome student")
+  			      {
+  			    	  window.location.href="success1.html";
+  			    	  }
+  			      else if(json.message=="welcome teacher")
+  			    	  {
+  			    	window.location.href="success2.html";
+  			    	  }
+  			      else if(json.message=="notexist")
+  			      { alert("用户名出错！") 
+  			    	  
+  			    	  }
+  			    	  else if(json.message=="wrong pwd")
+  			    	  {  alert("密码出错")}
+  			      
+  			   }
+  		   
+  	   }
+	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  	 xmlhttp.send("stuid="+stuid+"&encryptedPwd="+encodeURIComponent(encryptedPwd)+"&encryptedDesKey="+encodeURIComponent(encryptedDesKey)+"&sessionId="+sessionId);
+
+    }
+    function getid()
+    {
+    	value=document.getElementById("stuid").value;
+    	document.getElementById("idinfo").innerHTML=value;
+    }
+    </script>
+ 
+<title>学生管理系统</title>
+ </head>
+<body background="image/3.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 190%;attachment: fixed; background-size: cover;" onload="getPublicKey()">
+	<marquee scrollamount="6.6" ><h1><font color= rgba(180, 53, 112, 0.705) >欢迎来到学生管理系统</font></h1></marquee>
+		<br> <br><br><br><br>   
+		
+	   <h1 align="center">学生管理系统
+	   <br>
+	   <div align="center">
+	
+		  用户名:<input type="text" name="stuid" id="stuid"  required="required" placeholder=
+		  "stuid00000 for student teach00000 for teacher" style="width:220px;height:18px" onkeyup="getid()">
+		  <div id="idinfo"></div><br>
+		  密码：<input type="password" name="pwd"  id="pwd" required="required" style="width:220px;height:18px" placeholder="默认密码是123" onblur="checkduplicatestuid()">
+		 <br> <button onclick="login()" type="button">登录</button>
+		
+		  <br>
+		 </div>
+		  
+		<br>
+	
+		<a href="register.html">
+			<button type="button">注册</button>
+
+		</a>
+		
+		
+	
+		<br>
+
+
+				<script language =javascript >
+						var curIndex=0;
+						var timeInterval=2500;
+						var arr=new Array();
+						arr[0]="image/2.jpg";
+						arr[1]="image/3.jpg";
+						arr[2]="image/4.jpg";
+						arr[3]="image/1.jpg";
+						arr[4]="image/5.jpg";
+						arr[5]="image/6.jpg";
+						arr[6]="image/7.jpg";
+						arr[7]="image/8.JPG";
+						arr[8]="image/9.jpg";
+						arr[9]="image/10.jpg";
+						arr[10]="image/11.jpg";
+						arr[11]="image/12.jpeg";
+						arr[12]="image/13.jpg";
+						arr[13]="image/14.jpg";
+						arr[14]="image/15.jpg";
+						arr[15]="image/16.jpg";
+						
+						
+						setInterval(changeImg,timeInterval);
+						
+						
+						function changeImg()
+						{
+						var obj=document.getElementById("obj");
+						if (curIndex==arr.length-1)
+						{
+						curIndex=0;
+						}
+						else
+						{
+						curIndex+=1;
+						}
+						
+						obj.src=arr[curIndex];
+						
+						}
+						</script>
+						<h1 align="center">
+								<img id=obj src ="image/2.jpg" width=600 height=400 border =0>
+														  
+								 </h1>    
+								
+	 
+		
+  </body>
+</html>

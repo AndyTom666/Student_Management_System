@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>老师注册</title>
+<style type="text/css">
+	body {
+			margin:0px auto;
+		}
+		#fixedLayer1 {
+			position:fixed;
+			left: 20px;
+			top: 400;
+			width:150;
+			line-height:4;
+			background-color: rgba(41, 198, 209, 0.705); 
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+		#fixedLayer2 {
+			position:fixed; 
+			right:20px;
+			top: 200;
+			width:150;
+			background-color: rgba(41, 198, 209, 0.705);
+			line-height:4;
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+	button{
+		height: 36px;
+		width: 100px;
+		color:rgba(73, 42, 30, 0.836);
+		background-color:#577ac5;
+		border-color: rgba(117, 85, 15, 0.822);
+	}
+	</style>
+<script type="text/javascript">
+	function getteachid()
+    {
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "getnewteachid.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText==null)
+  			      {
+  			      alert("获取老师账号失败")
+  			    	  }else if(xmlhttp.responseText!=null)
+  			    		  {
+					  var teacherid=xmlhttp.responseText;
+					  document.getElementById("teacherid").value=teacherid
+  			    	
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send();
+    }
+ function teacherregister()
+    {
+    	teacherid=document.getElementById("teacherid").value;
+    	teachername=document.getElementById("teachername").value;
+    	pwd=document.getElementById("pwd").value;
+    	professionid=document.getElementById("professionid").value;
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "teacherregister.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText=="no")
+  			      {
+  			      alert("注册老师失败！")
+  			    	  }else if(xmlhttp.responseText=="yes")
+  			    		  {
+  			    	  alert("注册老师成功");
+  			    	window.location.href="success2.html";
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send("teacherid="+teacherid+"&teachername="+teachername+"&pwd="+pwd+"&professionid="+professionid);
+    }
+ </script>
+</head>
+<body background="image/4.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 2000%;attachment: fixed; background-size: cover; "onload="getteachid()">
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+<br><br><br><br><br><br>
+	   <h1 align="center">老师注册<br>
+		  学号:<input type="text" id="teacherid"  required="required"   value="" readonly><br>
+		 名字:<input type="text" id="teachername" required="required"><br>
+		  密码：<input type="password" id="pwd" required="required"><br>
+		  专业号：<select required="required" id="professionid">
+    <option  value="p01">p01 计算机控制</option>
+    <option  value="p02">p02 网络安全</option>
+    <option  value="p03">p03 计算机应用</option>
+  </select><br>
+		 <button onclick="teacherregister()">注册老师 </button>
+		 
+		  <br>
+		  
+		
+		</form>
+		<a href="login.html">返回首页</a>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>老师界面(管理员权限)</title>
+<style type="text/css">
+	body {
+		margin:0px auto;
+	}
+	#fixedLayer1 {
+		position:fixed;
+		left: 20px;
+		top: 100px;
+		width:150;
+		line-height:4;
+		/* background-color: rgba(41, 198, 209, 0.705); */
+		/* border:1px solid rgba(56, 57, 82, 0.705); */
+	}
+	#fixedLayer2 {
+		position:fixed;
+		right:20px;
+		top: 100px;
+		width:150;
+		line-height:4;
+	}
+	
+	</style>
+<style type="text/css">
+button{
+	height: 36px;
+	width: 100px;
+	color:rgba(73, 42, 30, 0.836);
+	background-color:darkturquoise;
+	border-color: rgba(117, 85, 15, 0.822);
+}
+</style>
+<script type="text/javascript">
+
+function getteachername()
+{
+	   if (window.XMLHttpRequest) 
+	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+	      xmlhttp=new XMLHttpRequest(); 
+	   } 
+	 else {// code for IE6, IE5 
+	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+	 } 
+	   
+	   xmlhttp.open("get", "teachersession.do", true);
+	   xmlhttp.onreadystatechange=function()
+	   {
+		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			   {
+			      value=xmlhttp.responseText;
+			      json=eval("("+value+")");
+			      document.getElementById("teachername1").innerHTML=json.teachername;
+				  document.getElementById("teachername2").innerHTML=json.teachername;
+				  document.getElementById("teacherid").innerHTML=json.teacherid;
+				  document.getElementById("pwd").innerHTML=json.pwd;
+				  document.getElementById("professionid").innerHTML=json.professionid;
+			      
+			   }
+		   
+	   }
+	   xmlhttp.send();
+// alert(sno);
+}
+
+</script>
+</head>
+<body onload="getteachername()" background="image/1.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 220%;attachment: fixed; background-size: cover;">
+	<marquee scrollamount="6.6" ><h1><font color= rgba(180, 53, 112, 0.705) >欢迎来到学生管理系统</font></h1></marquee>
+			<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html"><font color= rgba(4, 41, 24, 0.705)>学生注册</font></a><br>
+
+	   <a href="teacherregister.html"><font color= rgba(4, 41, 24, 0.705)>老师注册</font></a><br>
+
+		<a href="courseregister.html"><font color= rgba(4, 41, 24, 0.705)>课程录入</font></a><br>
+	 
+		<a href="stumarkinforegister.html"><font color= rgba(4, 41, 24, 0.705)>成绩录入</font></a><br>
+		<a href="studentmanager.html"><font color= rgba(4, 41, 24, 0.705)>学生管理</font></a><br>
+
+	   <a href="studentmarkinfomanager.html"><font color= rgba(4, 41, 24, 0.705)>成绩管理</font></a><br>
+
+		<a href="teachermanager.html"><font color= rgba(4, 41, 24, 0.705)>老师管理</font></a><br>
+	 
+		<a href="coursemanager.html"><font color= rgba(4, 41, 24, 0.705)>课程管理</font></a><br>
+
+	 <a href="javascript:scroll(0,0)"><font color= rgba(4, 41, 24, 0.705)>Top</font></a> 
+
+	   </div>
+	   <div id="fixedLayer2" align="center">
+ 
+		<a href="register.html"><font color= rgba(4, 41, 24, 0.705)>学生注册</font></a><br>
+
+	   <a href="teacherregister.html"><font color= rgba(4, 41, 24, 0.705)>老师注册</font></a><br>
+
+		<a href="courseregister.html"><font color= rgba(4, 41, 24, 0.705)>课程录入</font></a><br>
+	 
+		<a href="stumarkinforegister.html"><font color= rgba(4, 41, 24, 0.705)>成绩录入</font></a><br>
+		<a href="studentmanager.html"><font color= rgba(4, 41, 24, 0.705)>学生管理</font></a><br>
+
+	   <a href="studentmarkinfomanager.html"><font color= rgba(4, 41, 24, 0.705)>成绩管理</font></a><br>
+
+		<a href="teachermanager.html"><font color= rgba(4, 41, 24, 0.705)>老师管理</font></a><br>
+	 
+		<a href="coursemanager.html"><font color= rgba(4, 41, 24, 0.705)>课程管理</font></a><br>
+
+	 <a href="javascript:scroll(0,0)"><font color= rgba(4, 41, 24, 0.705)>Top</font></a> 
+
+   </div>
+		  
+   
+	  
+   <h1 align="center" style="color: rgb(13, 126, 38)">欢迎 <label id="teachername1"></label> 老师.</h1></label>
+<h1 align="center" style="color: rgb(13, 126, 38)">进入学生管理系统</h1>
+<table align="center">
+	<tr style="color: darkturquoise">
+		<td>
+			老师编号
+		</td>
+		<td>
+老师名字
+		</td>
+		<td>
+			密码
+		</td>
+		<td>
+			专业号
+		</td>
+
+	</tr>
+	<tr style="color: darkturquoise">
+		<td>
+			<label id="teacherid"></label>
+		</td>
+		<td>
+				<label id="teachername2"></label>
+		</td>
+		<td>
+				<label id="pwd"></label>
+		</td>
+		<td>
+				<label id="professionid"></label>
+		</td>
+
+	</tr>
+</table>
+<br><br><br>
+<table align="center">
+<tr><td><h1><a href="register.html"><button  onclick="alert('welecome to njupt')" type="button">新生注册</button></a></h1>
+	</td><td><h1 ><a href="studentmanager.html"><button  onclick="alert('welecome to student manager system')" type="button">学生管理</button></a></h1></td>
+		<td><h1 ><a href="studentmarkinfomanager.html"><button  onclick="alert('welecome to grade manager system')" type="button">学生成绩管理</button></a></h1></td>
+			<td>
+				<h1 ><a href="teacherregister.html"><button  onclick="alert('welecome to teacher register page')" type="button">老师注册</button></a></h1></td>
+				
+		</tr>
+		<tr>
+				<td>
+						<h1><a href="courseregister.html"><button  onclick="alert('welecome to course register page')" type="button">课程录入</button></a></h1></td>
+			<td>
+				<h1><a href="stumarkinforegister.html"><button  onclick="alert('welecome to stumarkinfo register page')" type="button">学生成绩录入</button></a></h1></td>
+				<td><h1><a href="coursemanager.html"><button  onclick="alert('welecome to course manager page')" type="button">课程管理</button></a></h1></td>
+				<td><h1><a href="teachermanager.html"><button  onclick="alert('welecome to stumarkinfo register page')" type="button">老师管理</button></a></h1>
+			</td>
+
+		</tr>
+</table>
+	<a href="weixinmenu.html"><h1 align="center">进入微信菜单界面</h1></a>
+<a href="login.html"><h1 align="center">返回首页</h1></a>
+
+
+	
+
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	body {
+			margin:0px auto;
+		}
+		#fixedLayer1 {
+			position:fixed;
+			left: 20px;
+			top: 400;
+			width:150;
+			line-height:4;
+			background-color: rgba(41, 198, 209, 0.705); 
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+		#fixedLayer2 {
+			position:fixed; 
+			right:20px;
+			top: 200;
+			width:150;
+			background-color: rgba(41, 198, 209, 0.705);
+			line-height:4;
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+	button{
+		height: 36px;
+		width: 100px;
+		color:rgba(73, 42, 30, 0.836);
+		background-color:#577ac5;
+		border-color: rgba(117, 85, 15, 0.822);
+	}
+	</style>
+<script type="text/javascript">
+    function getteacherid()
+    {
+        teacherid=location.search.substring(1);
+        alert("欢迎你："+teacherid);
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+           xmlhttp = new XMLHttpRequest();
+       } else {// code for IE6, IE5 
+           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+       }
+
+       xmlhttp.open("post", "getupdateteacher.do", true);
+       xmlhttp.onreadystatechange = function() {
+           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+               value=xmlhttp.responseText;
+                 json=eval("("+value+")");
+                 
+                 document.getElementById("teacherid").value=json.teacherid;
+                 document.getElementById("teachername").placeholder=json.teachername;
+                 document.getElementById("pwd").placeholder=json.pwd;
+                 document.getElementById("professionid").placeholder=json.professionid;
+                 document.getElementById("role").value=json.role;
+           }
+
+       }
+       xmlhttp.setRequestHeader("Content-type",
+         "application/x-www-form-urlencoded");
+       xmlhttp.send("teacherid="+teacherid);
+    }
+    function teacherupdate()
+   {
+       
+    teacherid=document.getElementById("teacherid").value;
+    teachername=document.getElementById("teachername").value;
+    pwd=document.getElementById("pwd").value;
+    professionid=document.getElementById("professionid").value;
+    role=document.getElementById("role").value;
+        if (window.XMLHttpRequest) 
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+           xmlhttp=new XMLHttpRequest(); 
+        } 
+      else {// code for IE6, IE5 
+         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+      } 
+        
+        xmlhttp.open("post", "teacherupdate.do", true);
+        xmlhttp.onreadystatechange=function()
+        {
+            //alert(xmlhttp.responseText);
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                   if(xmlhttp.responseText=="no")
+                   {
+                   alert("更新课程失败！")
+                       }else if(xmlhttp.responseText=="yes")
+                           {
+                       alert("更新课程成功");
+                     window.location.href="teachermanager.html";
+                           }
+                   
+                   
+                }
+            
+        }
+      xmlhttp.setRequestHeader("Content-type",
+     "application/x-www-form-urlencoded");
+        xmlhttp.send("teacherid="+teacherid+"&teachername="+teachername+"&pwd="+pwd+"&professionid="+professionid+"&role="+role);
+   }
+ </script>
+</head>
+<body background="image/15.jpg" 
+   style=" background-repeat:no-repeat;background-size:110% 120%;attachment: fixed; background-size: cover;" onload="getteacherid()" >
+   <div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+<br><br><br><br><br><br>
+      <h1 align="center">老师更新<br>
+       <div id="displaybox" ></div>
+       <br>
+         老师编号:<input type="text" id="teacherid"  required="required"   value="" readonly/><br/>
+        老师名字:<input type="text" id="teachername" required="required" placeholder=""/><br/>
+         密码：<input type="text" id="pwd" required="required"  onKeyUp="CharMode()" onblur="CharMode()"placeholder=""><br/>
+         专业号：<input  type="text" required="required" id="professionid" placeholder=""><br>
+        权限:<input type="text" id="role" required="required" value="" readonly>
+        <br>
+        <button onclick="teacherupdate()" > 老师更新</button>
+        
+         <br>
+         
+       
+       </form>
+       <a href="login.html">返回首页</a>
+
+</body>
+</html>

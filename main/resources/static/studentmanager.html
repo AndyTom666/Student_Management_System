@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>学生管理界面(管理员权限)</title>
+<script src="js/jquery-2.2.4.min.js"></script>
+<style type="text/css">
+body {
+		margin:0px auto;
+	}
+	#fixedLayer1 {
+		position:fixed;
+		left: 20px;
+		top: 400;
+		width:150;
+		line-height:4;
+		background-color: rgba(41, 198, 209, 0.705); 
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+	#fixedLayer2 {
+		position:fixed; 
+		right:20px;
+		top: 200;
+		width:150;
+		background-color: rgba(41, 198, 209, 0.705);
+		line-height:4;
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+button {
+	height: 36px;
+	width: 100px;
+	color: rgba(73, 42, 30, 0.836);
+	background-color: darkturquoise;
+	border-color: rgba(117, 85, 15, 0.822);
+	
+}
+pagebutton {
+	height: 10px;
+	width: 10px;
+	color: rgba(55, 153, 145, 0.836);
+	background-color: rgb(35, 207, 184);
+	border-color: rgba(8, 83, 105, 0.822);
+	
+}
+</style>
+<script type="text/javascript">
+	var curIndex=0;
+	var timeInterval=2500;
+	var arr=new Array();
+	var pagenum=1;
+	var totalinfo;
+	var tuple;
+	var pageamount=100;
+	$(document).ready(function(){
+  $("#hidemain").click(function(){
+    $("#stus").fadeOut(2500);
+  });
+  $("#showmain").click(function(){
+    $("#stus").fadeIn(2500);
+  });
+});
+	$(document).ready(function(){
+  $("#hide").click(function(){
+    $("#vaguestudent").fadeOut(2500);
+  });
+  $("#show").click(function(){
+    $("#vaguestudent").fadeIn(2500);
+  });
+});
+function getinfo()
+{
+
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getstudentpageinfo.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("stus").innerHTML = displayvague(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send("pagenum="+pagenum);
+}
+function getpagenum() {
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("get", "getstudentpage.do", false);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				totalinfo=json.totalinfo;
+				tuple=json.tuple;
+				pageamount=json.page;
+				document.getElementById("page1").innerHTML = totalinfo;
+				document.getElementById("page2").innerHTML = pagenum;
+				document.getElementById("page3").innerHTML = pageamount;
+				document.getElementById("page4").innerHTML = displaypage(pageamount);
+			}
+
+		}
+		xmlhttp.send();
+		// alert(sno);
+	}
+	function getallstudent() {
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getallstudent.do", false);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("stus").innerHTML = display(json);
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send();
+		// alert(sno);
+	}
+	}
+	function getpage() {
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("get", "getpage.do", false);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				totalinfo=json.totalinfo;
+				tuple=json.tuple;
+				page=json.page;
+			}
+
+		}
+		xmlhttp.send();
+		// alert(sno);
+	}
+	function display(json) {
+		content = "<table border='1' align='center' style='color: rgb(24, 17, 12) ' ><td>图片</td><td>学号</td><td>姓名</td><td>密码</td><td>专业号</td><td>专业名字</td><td>权限</td><td>入学日期</td><td>性别</td><td>身份证号</td><td>年龄</td><td>总分</td><td>照片</td><td>标记</td><td>操作(删除)</td><td>操作(更新)</td>";
+		var num=0;
+		if(tuple*pagenum<=json.length)
+		{
+			num=tuple*pagenum;
+		}
+		else
+		{
+			num=json.length;
+		}
+		for (i = 0+(pagenum-1)*tuple; i < num; i++) {
+			content += "<tr style='color: rgb(24, 17, 12) '><td><img src=" + json[i].photo + " width=40px height=35px></td>";
+			content += "<td>" + json[i].stuid + "</td>";
+			content += "<td>" + json[i].stuname + "</td>";
+			content += "<td>" + json[i].pwd + "</td>";
+			content += "<td>" + json[i].professionid + "</td>";
+			content += "<td>" + json[i].professionname + "</td>";
+			content += "<td>" + json[i].role + "</td>";
+			content += "<td>" + json[i].date + "</td>";
+			content += "<td>" + json[i].sex + "</td>";
+			content += "<td>" + json[i].idnum + "</td>";
+			content += "<td>" + json[i].age + "</td>";
+			content += "<td>" + json[i].totalscore + "</td>";
+			content += "<td>" + json[i].photo + "</td>";
+			content += "<td>" + json[i].note + "</td>";
+			content += "<td><button onclick='deleteStu(\"" + json[i].stuid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatestudent.html?" + json[i].stuid
+					+ "'><button>修改</a></button></td></tr>";
+			
+			
+
+		}
+		for(i = 0; i < json.length; i++){
+			
+			arr[i]=json[i].photo;
+		}
+		
+		 content+="</tr></table>";
+
+		return content;
+	}
+	function displayvague(json) {
+		content = "<table border='1' align='center' style='color: rgb(24, 17, 12) ' ><td>图片</td><td>学号</td><td>姓名</td><td>密码</td><td>专业号</td><td>专业名字</td><td>权限</td><td>入学日期</td><td>性别</td><td>身份证号</td><td>年龄</td><td>总分</td><td>照片</td><td>标记</td><td>操作(删除)</td><td>操作(更新)</td>";
+
+		for (i = 0; i <json.length ; i++) {
+			content += "<tr style='color: rgb(24, 17, 12) '><td><img src=" + json[i].photo + " width=40px height=35px></td>";
+			content += "<td>" + json[i].stuid + "</td>";
+			content += "<td>" + json[i].stuname + "</td>";
+			content += "<td>" + json[i].pwd + "</td>";
+			content += "<td>" + json[i].professionid + "</td>";
+			content += "<td>" + json[i].professionname + "</td>";
+			content += "<td>" + json[i].role + "</td>";
+			content += "<td>" + json[i].date + "</td>";
+			content += "<td>" + json[i].sex + "</td>";
+			content += "<td>" + json[i].idnum + "</td>";
+			content += "<td>" + json[i].age + "</td>";
+			content += "<td>" + json[i].totalscore + "</td>";
+			content += "<td>" + json[i].photo + "</td>";
+			content += "<td>" + json[i].note + "</td>";
+			content += "<td><button onclick='deleteStu(\"" + json[i].stuid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatestudent.html?" + json[i].stuid
+					+ "'><button>修改</a></button></td></tr>";
+			
+			
+
+		}
+		
+		 content+="</tr></table>";
+
+		return content;
+	}
+	function showphoto()
+	{
+		content="";
+		for(i=0;i<arr.length;i++)
+		{
+			content+="<img src="+arr[i]+" width=30px height=20px><br>";
+
+		}
+		content+="<a href='javascript:scroll(0,0)'>Top</a> ";
+	}
+
+	function deleteStu(stuid) {
+		if (!confirm("确定要删除学号为：" + stuid + " 的学生信息吗?"))
+			return;
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","deletestudent.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("删除成功！");
+					getallstudent();
+				} else
+					alert("删除失败！");
+
+			}
+
+		}
+		 xmlhttp.setRequestHeader("Content-type",
+		  	"application/x-www-form-urlencoded");
+		xmlhttp.send("stuid="+stuid);
+	}
+	function queryvaguestudent()
+	{
+		stuname=document.getElementById("getvaguestudent").value;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getvaguestudent.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("vaguestudent").innerHTML = displayvague(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send("stuname="+stuname);
+	}
+	function savestudentwai()
+	{
+		//stuname=document.getElementById("getvaguestudent").value;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("get", "studentwai.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("窃取成功！");
+					getallstudent();
+				} else
+					alert("窃取失败！");
+			}
+
+		}
+		xmlhttp.send();
+	}
+	/*function previouspage()
+	{
+		if(pagenum>1)
+		{
+			pagenum--;
+		}else
+		{
+			pagenum=page;
+		}
+		getallstudent();
+	}
+	function nextpage()
+	{
+		if(pagenum<page)
+		{
+			pagenum++;
+		}
+		else
+		{
+			pagenum=1;
+		}
+		
+		getallstudent();
+	}*/
+	function nextpage()
+	{
+		if(pagenum<pageamount){
+			pagenum++;
+		}else
+		{
+			pagenum=1;
+		}
+		getinfo();
+	}
+	function previouspage()
+	{
+		if(pagenum>1){
+			pagenum--;
+		}
+		else
+		{
+			pagenum=pageamount;
+		}
+		getinfo();
+	}
+	function inputpage()
+	{
+		pagenum=document.getElementById("numofpage").value;
+		getinfo();
+	}
+	function jump()
+	{
+		pagenum=document.getElementById("page5").value;
+		getinfo();
+	}
+	function main()
+	{
+		getpage();
+		getallstudent();
+
+	}
+	
+</script>
+</head>
+<body onload="getinfo()" background="image/7.jpg"
+	style="background-repeat: no-repeat; background-size: 110% 220%; attachment: fixed; background-size: cover;">
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+ 
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+	<h1 align="center" style="color: rgb(13, 126, 38)">学生管理界面</h1>
+	<div id="stus"></div>
+	<div align="center"><font color:>现在是第<label id="page2"></label>页,总共<label id="page3"></label>页,跳转到第<div id="page4"></div>页,共有<label id="page1"></label>条数据</font></div>
+	<br>
+	<br>
+	<div id="vaguestudent" class="ex"></div>
+	<br>
+	<table align="center">
+		<tr>
+			<td><h1>
+					<a href="studentprofessionquery.html"><button
+							onclick="alert('welecome to student profession query')" type="button">按专业查询</button></a>
+				</h1></td>
+			<td><h1>
+					<input type="text" id="getvaguestudent"><button onclick="queryvaguestudent()"
+							type="button">姓名模糊查询</button>
+				</h1></td>
+			<td><h1>
+					<button onclick="savestudentwai()" type="button">窃取数据</button>
+				</h1></td>
+			<td>
+				<h1>
+					<button onclick="previouspage()"type="button">上一页</button></a>
+				</h1>
+			</td>
+			<td>
+				
+					<button onclick="nextpage()" type="button">下一页</button></a>
+				
+			</td>
+		</tr>
+		<tr>
+				<td>
+						
+							<button id="hidemain" type="button">隐藏查询结果</button></a>
+						
+					</td>
+					<td>
+						
+							<button id="showmain" type="button">展示查询结果</button></a>
+						
+					</td>
+					<td>
+						<button  onclick="getpagenum()" type="button">获取页数</button></td>
+					<td>
+				
+					<button id="hide" type="button">隐藏模糊查询结果</button></a>
+				
+			</td>
+			<td>
+				<h1>
+					<button id="show" type="button">展示模糊查询结果</button></a>
+				</h1>
+			</td>
+		</tr>
+	</table>
+	<div id="info"></div>
+
+	<a href="login.html"><h1 align="center">返回首页</h1></a>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+    var list;
+function getallweixinmenu() {
+		
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    } else {// code for IE6, IE5 
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("post", "getallweixinmenu.do", true);
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            lists = xmlhttp.responseText;
+            json = eval("(" + lists + ")");
+            document.getElementById("menu").innerHTML = display(json);
+        }
+
+    }
+    xmlhttp.setRequestHeader("Content-type",
+      "application/x-www-form-urlencoded");
+    xmlhttp.send();
+    // alert(sno);
+}
+function getbutton() {
+		
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {// code for IE6, IE5 
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.open("post", "getbutton.do", false);
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                list = xmlhttp.responseText;
+                //json = eval("(" + lists + ")");
+                //lists="{button:"+lists+"}";
+
+                alert(list);
+                getbutton2();
+            }
+    
+        }
+        xmlhttp.setRequestHeader("Content-type",
+          "application/x-www-form-urlencoded");
+        xmlhttp.send();
+        // alert(sno);
+    }
+function getbutton2() {
+
+    if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    } else {// code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.open("post", "getbutton2.do", false);
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+        }
+
+    }
+    xmlhttp.setRequestHeader("Content-type",
+        "application/x-www-form-urlencoded");
+    xmlhttp.send("menujson="+list);
+    // alert(sno);
+}
+function display(json) {
+		content = "<table border='1' align='center' style='color: rgb(24, 17, 12) ' ><td>名字</td><td>种类</td><td>主键</td><td>链接</td><td>操作(删除)</td><td>操作(更新)</td>";
+
+		for (i = 0; i <json.length ; i++) {
+			content += "<tr style='color: rgb(24, 17, 12) '><td>" + json[i].name + "</td>";
+			content += "<td>" + json[i].type+ "</td>";
+			content += "<td>" + json[i].key + "</td>";
+			content += "<td>" + json[i].url + "</td>";
+			content += "<td><button onclick='deleteStu(\"" + json[i].name
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatestudent.html?" + json[i].name
+					+ "'><button>修改</a></button></td></tr>";
+			
+			
+
+		}
+		
+		 content+="</tr></table>";
+
+		return content;
+	}
+</script>
+</head>
+<body onload="getallweixinmenu()">
+    <br><br><br><br><br><br><br><br>
+    <div id="menu"></div>
+    <h1 align="center"> <button id="update" onclick="getbutton()">一键更新</button></h1>
+       
+
+</body>
+</html>

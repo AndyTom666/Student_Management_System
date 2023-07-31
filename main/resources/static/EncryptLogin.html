@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encrypt</title>
+    <script src="js/jsencrypt.min.js"></script>
+    <script type="text/javascript">
+        var ps;
+        var d;
+        function getPublicKey()
+        {
+            if (window.XMLHttpRequest)
+            {// code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp=new XMLHttpRequest();
+            }
+            else {// code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+
+            xmlhttp.open("post", "getpublickey.do", true);
+            xmlhttp.onreadystatechange=function()
+            {
+
+                //alert(xmlhttp.responseText);
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    //var crypt = new JSEncrypt({default_key_size: 1024});
+                    //crypt.getKey();
+                    //crypt.getPrivateKey();
+                    //crypt.getPublicKey();
+                    var pub=xmlhttp.responseText;
+                    alert(pub);
+                    var encrypt = new JSEncrypt();
+                    encrypt.setPublicKey(pub);
+                    var pwd=document.getElementById("pwd");
+                    d=encrypt.encrypt(pwd);
+                    //var message=document.getElementById("pwd");
+                    //const txt = encrypt.encrypt(message);
+                    ps= encodeURI(d).replace(/\+/g, '%2B');
+                    //mm= encodeURI(d).replace(/\+/g, '%2B');
+                }
+                //alert(mm);
+                //sendPwd();
+
+
+            }
+            xmlhttp.setRequestHeader("Content-type",
+                "application/x-www-form-urlencoded");
+            xmlhttp.send();
+        }
+        function sendPwd()
+        {
+            if (window.XMLHttpRequest)
+            {// code for IE7+, Firefox, Chrome, Opera, Safari
+                xmlhttp=new XMLHttpRequest();
+            }
+            else
+                {// code for IE6, IE5
+                xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            //alert(p);
+            xmlhttp.open("post", "getpwd.do", true);
+            xmlhttp.onreadystatechange=function()
+            {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+
+
+                    alert("sdadassad");
+                }
+
+            }
+            xmlhttp.setRequestHeader("Content-type",
+                "application/x-www-form-urlencoded");
+            xmlhttp.send("pwd="+ps);
+        }
+    </script>
+
+</head>
+<body>
+<br><br><br><br><br><br><br><br>
+<h1 align="center">RSA加密测试<br>
+    <input type="hidden" value="${publicKeyString}" id="publicKeyString">
+    账号:<input type="text" id="userid"  required="required" autofocus><br>
+    密码：<input type="password" id="pwd" required="required"><br/>
+    <button id="getp" onclick="getPublicKey()">加密</button>
+    <br>
+    <button id="send" onclick="sendPwd()">发送</button></h1>
+</body>
+</html>

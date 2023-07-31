@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	body {
+			margin:0px auto;
+		}
+		#fixedLayer1 {
+			position:fixed;
+			left: 20px;
+			top: 400;
+			width:150;
+			line-height:4;
+			background-color: rgba(41, 198, 209, 0.705); 
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+		#fixedLayer2 {
+			position:fixed; 
+			right:20px;
+			top: 200;
+			width:150;
+			background-color: rgba(41, 198, 209, 0.705);
+			line-height:4;
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+	button{
+		height: 36px;
+		width: 100px;
+		color:rgba(73, 42, 30, 0.836);
+		background-color:#577ac5;
+		border-color: rgba(117, 85, 15, 0.822);
+	}
+	</style>
+<script type="text/javascript">
+    function getmarkid()
+    {
+        markid=location.search.substring(1);
+        alert("欢迎你："+markid);
+        if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+           xmlhttp = new XMLHttpRequest();
+       } else {// code for IE6, IE5 
+           xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+       }
+
+       xmlhttp.open("post", "getupdatestumarkinfo.do", true);
+       xmlhttp.onreadystatechange = function() {
+           if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+               value=xmlhttp.responseText;
+                 json=eval("("+value+")");
+                 
+                 document.getElementById("markid").value=json.markid;
+                 document.getElementById("stuid").placeholder=json.stuid;
+                 document.getElementById("courseid").placeholder=json.courseid;
+                 document.getElementById("basescore").placeholder=json.basescore;
+                 document.getElementById("testscore").placeholder=json.testscore;
+                 document.getElementById("finalscore").placeholder=json.finalscore;
+                 document.getElementById("adddate").placeholder=json.adddate;
+                 document.getElementById("note").placeholder=json.note;
+           }
+
+       }
+       xmlhttp.setRequestHeader("Content-type",
+         "application/x-www-form-urlencoded");
+       xmlhttp.send("markid="+markid);
+    }
+    function stumarkinfoupdate()
+   {
+       
+        markid=document.getElementById("markid").value;
+        stuid=document.getElementById("stuid").value;
+        courseid=document.getElementById("courseid").value;
+        basescore=document.getElementById("basescore").value;
+        testscore=document.getElementById("testscore").value;
+        finalscore=document.getElementById("finalscore").value;
+       adddate=document.getElementById("adddate").value;
+       note=document.getElementById("note").value;
+       
+        if (window.XMLHttpRequest) 
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+           xmlhttp=new XMLHttpRequest(); 
+        } 
+      else {// code for IE6, IE5 
+         xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+      } 
+        
+        xmlhttp.open("post", "stumarkinfotupdate.do", true);
+        xmlhttp.onreadystatechange=function()
+        {
+            //alert(xmlhttp.responseText);
+            if (xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                   if(xmlhttp.responseText=="no")
+                   {
+                   alert("更新学生成绩失败！")
+                       }else if(xmlhttp.responseText=="yes")
+                           {
+                       alert("更新学生成绩成功");
+                     window.location.href="studentmarkinfomanager.html";
+                           }
+                   
+                   
+                }
+            
+        }
+      xmlhttp.setRequestHeader("Content-type",
+     "application/x-www-form-urlencoded");
+        xmlhttp.send("markid="+markid+"&stuid="+stuid+"&courseid="+courseid+"&basescore="+basescore+"&testscore="+testscore
+                +"&finalscore="+finalscore+"&adddate="+adddate+"&note="+note);
+   }
+ </script>
+</head>
+<body background="image/11.jpg" 
+   style=" background-repeat:no-repeat;background-size:110% 120%;attachment: fixed; background-size: cover;" onload="getmarkid()" >
+   <div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+<br><br><br><br><br><br>
+      <h1 align="center">学生成绩更新<br>
+       <div id="displaybox" ></div>
+       <br>
+         成绩编号:<input type="text" id="markid"  required="required"   value="" readonly/><br/>
+        学号:<input type="text" id="stuid" required="required" placeholder=""/><br/>
+         成绩编号：<input type="text" id="courseid" required="required"  onKeyUp="CharMode()" onblur="CharMode()"placeholder=""><br/>
+         基础成绩：<input  type="text" required="required" id="basescore" placeholder=""><br>
+        期末成绩:<input type="text" id="testscore" required="required" placeholder="">
+        
+        <br>
+         总分:<input type="text" name="sex" id="finalscore" placeholder=""><br>
+         添加日期:<input type="text" id="adddate" required="required" placeholder=""><br>
+        说明:<input type="text" id="note"  placeholder=""><br>
+        <button onclick="stumarkinfoupdate()" > 学生成绩更新</button>
+        
+         <br>
+         
+       
+       </form>
+       <a href="login.html">返回首页</a>
+
+
+</body>
+</html>

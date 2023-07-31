@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+    button {
+        height: 36px;
+        width: 100px;
+        color: rgba(73, 42, 30, 0.836);
+        background-color: darkturquoise;
+        border-color: rgba(117, 85, 15, 0.822);
+        
+    }
+</style>
+<script type="text/javascript">
+    function getstudentname()
+{
+	   if (window.XMLHttpRequest) 
+	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+	      xmlhttp=new XMLHttpRequest(); 
+	   } 
+	 else {// code for IE6, IE5 
+	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+	 } 
+	   
+	   xmlhttp.open("get", "studentsession.do", true);
+	   xmlhttp.onreadystatechange=function()
+	   {
+		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+			   {
+			      value=xmlhttp.responseText;
+			      json=eval("("+value+")");
+			      document.getElementById("studentname1").innerHTML=json.stuname;
+                  document.getElementById("studentname2").innerHTML=json.stuname;
+				  document.getElementById("stuid").innerHTML=json.stuid;
+				  document.getElementById("pwd").value=json.pwd;
+				  document.getElementById("professionid").innerHTML=json.professionid;
+                  document.getElementById("professionname").innerHTML=json.professionname;
+                  document.getElementById("role").innerHTML=json.role;
+                  document.getElementById("date").innerHTML=json.date;
+                  document.getElementById("sex").innerHTML=json.sex;
+                  document.getElementById("idnum").innerHTML=json.idnum;
+                  document.getElementById("age").innerHTML=json.age;
+                  document.getElementById("totalscore").innerHTML=json.totalscore;
+                  document.getElementById("photo").value=json.photo;
+                  document.getElementById("note").innerHTML=json.note;
+                  document.getElementById("picture").innerHTML="<img src="+json.photo+" width=100px height=100px>";
+
+			      
+			   }
+		   
+	   }
+	   xmlhttp.send();
+}
+function studentupdate()
+    {
+		
+    	stuid=document.getElementById("stuid").innerHTML;
+    	stuname=document.getElementById("studentname2").innerHTML;
+    	pwd=document.getElementById("pwd").value;
+    	professionid=document.getElementById("professionid").innerHTML;
+    	date=document.getElementById("date").innerHTML;
+    	sex=document.getElementById("sex").innerHTML;
+    	idnum=document.getElementById("idnum").innerHTML;
+    	totalscore=document.getElementById("totalscore").innerHTML;
+    	photo=document.getElementById("photo").value;
+    	note=document.getElementById("note").innerHTML;
+    	
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "studentupdate.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText=="no")
+  			      {
+  			      alert("更新学生失败！")
+  			    	  }else if(xmlhttp.responseText=="yes")
+  			    		  {
+  			    	  alert("更新学生成功");
+  			    	window.location.href="success1.html";
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send("stuid="+stuid+"&stuname="+stuname+"&pwd="+pwd+"&professionid="+professionid+"&date="+date
+  			   +"&sex="+sex+"&idnum="+idnum+"&totalscore="+totalscore+"&photo="+photo+"&note="+note);
+	}
+function getselectedcourse()
+{
+	stuid=document.getElementById("stuid").innerHTML;
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getselectedcourse.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("selectedcourse").innerHTML = display(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send("stuid="+stuid);
+}
+function display(json) {
+		content = "<table border='1' align='center' style='color: rgb(24, 17, 12) ' ><td>学号</td><td>成绩号</td><td>课程号</td><td>课程名</td><td>平时成绩</td><td>期末成绩</td><td>总成绩</td><td>录入日期</td><td>标记</td><td>操作(删除)</td><td>操作(更新)</td>";
+
+		for (i = 0; i <json.length ; i++) {
+			content += "<tr style='color: rgb(24, 17, 12) '><td>" + json[i].stuid + "</td>";
+			content += "<td>" + json[i].markid + "</td>";
+			content += "<td>" + json[i].courseid + "</td>";
+			content += "<td>" + json[i].coursename + "</td>";
+			content += "<td>" + json[i].basescore + "</td>";
+			content += "<td>" + json[i].testscore + "</td>";
+			content += "<td>" + json[i].finalscore+ "</td>";
+			content += "<td>" + json[i].adddate + "</td>";
+			content += "<td>" + json[i].note + "</td>";
+			content += "<td><button onclick='deleteStu(\"" + json[i].stuid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatestudent.html?" + json[i].stuid
+					+ "'><button>修改</a></button></td></tr>";
+			
+			
+
+		}
+		
+		 content+="</tr></table>";
+
+		return content;
+	}
+</script>
+</head>
+<body onload="getstudentname()" background="image/16.jpg" 
+	style=" background-repeat:no-repeat;background-size:110% 220%;attachment: fixed; background-size: cover;">
+	<h1 align="center" style="color: rgb(13, 126, 38)">欢迎 <label id="studentname1"></label> 同学.</h1></label>
+<h1 align="center" style="color: rgb(13, 126, 38)">进入学生管理系统</h1>
+<table align="center">
+	<tr style="color: rgb(0, 49, 209)">
+		<td>图片</td> <td><div id="picture"></div></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>学号</td> <td><label id="stuid"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>名字</td> <td><label id="studentname2"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>密码</td> <td><input type="text" id="pwd" value="" required="required"></div></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>专业号</td> <td><label id="professionid"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>专业名</td> <td><label id="professionname"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>权限</td> <td><label id="role"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>入学日期</td> <td><label id="date"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>性别</td> <td><label id="sex"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>身份证号</td> <td><label id="idnum"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>年龄</td> <td><label id="age"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+		<td>总分</td> <td><label id="totalscore"></label></td>
+    </tr>
+    <tr style="color: rgb(0, 49, 209)">
+        <td>照片</td> <td><input type="text" id="photo" value="" required="required"></div></td>
+    </tr>
+        <tr style="color: rgb(0, 49, 209)">
+            <td>标记</td> <td><label id="note"></label></td>
+            
+    </tr>
+    
+    
+</table>
+<div id="selectedcourse"></div>
+<h1 align="center"> <button onclick="studentupdate()" type="button">更新学生信息</button></h1>
+<h1 align="center"> <button onclick="getselectedcourse()" type="button">获取所选课程成绩</button></h1>
+<h1 align="center"><a href="login.html">返回首页</a></h1>
+</body>
+</html>

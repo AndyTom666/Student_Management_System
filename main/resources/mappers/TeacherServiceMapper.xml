@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhuang.mapper.TeacherServiceMapper">
+	<select id="queryAll" resultType="Teacher">
+		select * from teacher
+	</select>
+	<insert id="saveTeacher"  parameterType="Teacher" >
+		insert into teacher(teacherid,teachername,pwd,professionid,role)
+		values(#{teacherid},#{teachername},#{pwd},#{professionid},#{role})
+	  </insert>
+	  <update id="updateTeacher" parameterType="Teacher" >
+	  update teacher set teachername=#{teachername},pwd=#{pwd},professionid=#{professionid},
+	  role=#{role} where teacherid=#{teacherid}
+	  </update>
+	  <select id="querySelectedUser" parameterType="String" resultType="Teacher">
+		select * from teacher where teacherid=#{teacherid}
+	  </select>
+	  <delete id="deleteAccount" parameterType="String">
+	  	delete from teacher where teacherid=#{teacherid}
+	  </delete>
+	<select id="getMaxTeachid" resultType="String">
+		select max(teacherid)from teacher
+	</select>
+
+</mapper>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>学生成绩管理界面(管理员权限)</title>
+<style type="text/css">
+body {
+		margin:0px auto;
+	}
+	#fixedLayer1 {
+		position:fixed;
+		left: 20px;
+		top: 400;
+		width:150;
+		line-height:4;
+		background-color: rgba(41, 198, 209, 0.705); 
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+	#fixedLayer2 {
+		position:fixed; 
+		right:20px;
+		top: 200;
+		width:150;
+		background-color: rgba(41, 198, 209, 0.705);
+		line-height:4;
+		border:1px solid rgba(56, 57, 82, 0.705);
+	}
+button{
+	height: 36px;
+	width: 100px;
+	color:rgba(73, 42, 30, 0.836);
+	background-color:#577ac5;
+	border-color: rgba(117, 85, 15, 0.822);
+}
+</style>
+<script type="text/javascript">
+var pagenum=1;
+var totalinfo;
+var tuple;
+var pageamount;
+function getallstumarkinfo()
+{
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getallstumarkinfo.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("stumarkinfo").innerHTML = display(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send();
+}
+function getinfo()
+{
+
+	if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getpageinfo.do", true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				document.getElementById("stumarkinfo").innerHTML = display(json);
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+	  	"application/x-www-form-urlencoded");
+		xmlhttp.send("pagenum="+pagenum);
+}
+function deletemark()
+{
+	var tobedelete=new Array();
+	var deleteusers = document.getElementsByName("deleteusers");
+	var j=0;
+	for(i=0;i<deleteusers.length;i++)
+	{
+		if(deleteusers[i].checked)
+		{
+			tobedelete[j++]=deleteusers[i].value;
+		}
+	}
+	if (!confirm("确定要删除这些学生的成绩信息吗?"))
+			return;
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","deletemany.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("删除成功！");
+					getinfo();
+				} else
+					alert("删除失败！");
+
+			}
+
+		}
+		 xmlhttp.setRequestHeader("Content-type",
+		  	"application/x-www-form-urlencoded");
+		xmlhttp.send("tobedelete="+tobedelete);
+
+}
+function display(json) {
+		content = "<table border='1' align='center' style='color:rgba(5, 2, 19, 0.836)'><td>复选框</td><td>成绩编号</td><td>学号</td><td>课程号</td><td>平时成绩</td><td>期末成绩</td><td>总成绩</td><td>添加日期</td><td>标记</td><td>操作（删除)</td><td>操作（更新）</td>";
+		for (i = 0; i < json.length; i++) {
+			content += "<tr style='color:rgba(5, 2, 19, 0.836)'><td><input name='deleteusers' type='checkbox' value="+json[i].markid+"><td>" + json[i].markid + "</td>";
+			content += "<td>" + json[i].stuid + "</td>";
+			content += "<td>" + json[i].courseid + "</td>";
+			content += "<td>" + json[i].basescore + "</td>";
+			content += "<td>" + json[i].testscore + "</td>";
+			content += "<td>" + json[i].finalscore + "</td>";
+			content += "<td>" + json[i].adddate + "</td>";
+			content += "<td>" + json[i].note + "</td>";
+			content += "<td><button onclick='deletestumarkinfo(\"" + json[i].markid
+					+ "\")'>删除</button></td>";
+			content += "<td><a href='updatestumarkinfo.html?" + json[i].markid
+					+ "'><button>修改</a></button></td></tr>";
+
+		}
+		 content+="</table>";
+
+		return content;
+	}
+	function deletestumarkinfo(markid) {
+		if (!confirm("确定要删除成绩编号为：" + markid + " 的学生成绩信息吗?"))
+			return;
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","deletestumarkinfo.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("删除成功！");
+					getallstumarkinfo();
+				} else
+					alert("删除失败！");
+
+			}
+
+		}
+		 xmlhttp.setRequestHeader("Content-type",
+		  	"application/x-www-form-urlencoded");
+		xmlhttp.send("markid="+markid);
+	}
+	function calculate()
+	{
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post","calculatetotalscore.do",true);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "yes") {
+					alert("同步成功！");
+					window.location.href="studentmanager.html";
+				} else
+					alert("同步失败！");
+
+			}
+			
+
+		}
+		xmlhttp.send();
+	}
+	function displaypage(pageamount)
+	{
+		content="<select id='page5'>";
+		for(i=0;i<pageamount;i++)
+		{
+			content+="<option value="+(i+1)+">第"+(i+1)+"页</option>";
+		}
+		content+="</select>"
+		return content;
+	}
+	function getpage() {
+		
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("get", "getstumarkinfopage.do", false);
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				lists = xmlhttp.responseText;
+				json = eval("(" + lists + ")");
+				totalinfo=json.totalinfo;
+				tuple=json.tuple;
+				pageamount=json.page;
+				document.getElementById("page1").innerHTML = totalinfo;
+				document.getElementById("page2").innerHTML = pagenum;
+				document.getElementById("page3").innerHTML = pageamount;
+				document.getElementById("page4").innerHTML = displaypage(pageamount);
+			}
+
+		}
+		xmlhttp.send();
+		// alert(sno);
+	}
+	function nextpage()
+	{
+		if(pagenum<pageamount){
+			pagenum++;
+		}else
+		{
+			pagenum=1;
+		}
+		getinfo();
+	}
+	function previouspage()
+	{
+		if(pagenum>1){
+			pagenum--;
+		}
+		else
+		{
+			pagenum=pageamount;
+		}
+		getinfo();
+	}
+	function inputpage()
+	{
+		pagenum=document.getElementById("numofpage").value;
+		getinfo();
+	}
+	function jump()
+	{
+		pagenum=document.getElementById("page5").value;
+		getinfo();
+	}
+
+</script>
+</head>
+<body onload="getinfo()" background="image/8.JPG" 
+	style=" background-repeat:no-repeat;background-size:110% 220%;attachment: fixed; background-size: cover;">
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+<h1 align="center" style="color: rgb(13, 126, 38)">学生成绩管理</h1>
+
+<div id="stumarkinfo" ></div>
+<div align="center"><font color:>现在是第<label id="page2"></label>页,总共<label id="page3"></label>页,跳转到第<div id="page4"></div>页,共有<label id="page1"></label>条数据</font></div>
+<table align="center">
+<tr><td><h1><button  onclick="calculate()" type="button">同步学生总分</button></h1>
+	</td><td><h1 ><button  onclick="previouspage()" type="button">上一页</button></h1></td>
+		<td><h1 ><button  onclick="nextpage()" type="button">下一页</button></h1></td>
+			<td>
+				<input type="text" id="numofpage"/><button  onclick="inputpage()" type="button">跳转页面</button></a></h1></td>
+				<td>
+					<button  onclick="getpage()" type="button">获取页数</button></td>
+		</tr>
+		<tr>
+			<td>
+				<h1><button  onclick="deletemark()" type="button">批量删除</button></h1>
+			</td>
+			<td>
+				<h1><button  onclick="jump()" type="button">下拉框跳转页面</button></h1>
+			</td>
+
+		</tr>
+</table>
+
+
+<a href="login.html"><h1 align="center">返回首页</h1></a>
+
+
+	
+
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style type="text/css">
+	body {
+			margin:0px auto;
+		}
+		#fixedLayer1 {
+			position:fixed;
+			left: 20px;
+			top: 120px;
+			width:150;
+			line-height:4;
+			background-color: rgba(41, 198, 209, 0.705); 
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+		#fixedLayer2 {
+			position:fixed; 
+			right:20px;
+			top: 120px;
+			width:150;
+			background-color: rgba(41, 198, 209, 0.705);
+			line-height:4;
+			border:1px solid rgba(56, 57, 82, 0.705);
+		}
+	button{
+		height: 36px;
+		width: 100px;
+		color:rgba(73, 42, 30, 0.836);
+		background-color:#577ac5;
+		border-color: rgba(117, 85, 15, 0.822);
+	}
+	</style>
+<title>学生成绩录入</title>
+<script type="text/javascript">
+function getmarkid()
+    {
+  	   if (window.XMLHttpRequest) 
+  	   {// code for IE7+, Firefox, Chrome, Opera, Safari
+  	      xmlhttp=new XMLHttpRequest(); 
+  	   } 
+  	 else {// code for IE6, IE5 
+  	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); 
+  	 } 
+  	   
+  	   xmlhttp.open("post", "getnewmarkid.do", true);
+  	   xmlhttp.onreadystatechange=function()
+  	   {
+  		   //alert(xmlhttp.responseText);
+  		   if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  			   {
+  			      if(xmlhttp.responseText==null)
+  			      {
+  			      alert("获取成绩号失败")
+  			    	  }else if(xmlhttp.responseText!=null)
+  			    		  {
+					  var markid=xmlhttp.responseText;
+					  document.getElementById("markid").value=markid;
+  			    	  //alert("注册学生成功");
+  			    	//window.location.href="login.html";
+  			    		  }
+  			      
+  			      
+  			   }
+  		   
+  	   }
+  	 xmlhttp.setRequestHeader("Content-type",
+  	"application/x-www-form-urlencoded");
+  	   xmlhttp.send();
+    }
+	function getratio() {
+		courseid = document.getElementById("courseid").value;
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "getratio.do", true);
+		xmlhttp.onreadystatechange = function() {
+			//alert(xmlhttp.responseText);
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == null) {
+					alert("课程号输入有误")
+				} else if (xmlhttp.responseText != null) {
+					var ratio = xmlhttp.responseText;
+					document.getElementById("ratio").value = ratio;
+					// alert(ratio);
+				}
+
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+				"application/x-www-form-urlencoded");
+		xmlhttp.send("courseid=" + courseid);
+	}
+	function stumarkinforegister() {
+		markid = document.getElementById("markid").value;
+		stuid = document.getElementById("stuid").value;
+		courseid = document.getElementById("courseid").value;
+		basescore = document.getElementById("basescore").value;
+		testscore = document.getElementById("testscore").value;
+		adddate = document.getElementById("adddate").value;
+		note = document.getElementById("note").value;
+		ratio = document.getElementById("ratio").value;
+		finalscore = parseFloat(basescore) * parseFloat(ratio)
+				+ parseFloat(testscore) * (1.0 - parseFloat(ratio));
+		alert("此学生的总分是" + finalscore);
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("post", "stumarkinforegister.do", true);
+		xmlhttp.onreadystatechange = function() {
+			//alert(xmlhttp.responseText);
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == "no") {
+					alert("学生成绩录入失败！")
+				} else if (xmlhttp.responseText == "yes") {
+					alert("学生成绩录入成功！");
+					window.location.href = "studentmarkinfomanager.html";
+				}
+
+			}
+
+		}
+		xmlhttp.setRequestHeader("Content-type",
+				"application/x-www-form-urlencoded");
+		xmlhttp.send("markid=" + markid + "&stuid=" + stuid + "&courseid="
+				+ courseid + "&basescore=" + basescore + "&testscore="
+				+ testscore + "&finalscore=" + finalscore + "&adddate="
+				+ adddate + "&note=" + note);
+	}
+	function getstuid()
+	{
+		
+
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("get", "getstuid1.do", false);
+		xmlhttp.onreadystatechange = function() {
+			//alert(xmlhttp.responseText);
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == null) {
+					alert("no")
+				} else if (xmlhttp.responseText != null) {
+					value=xmlhttp.responseText;
+                 	json=eval("("+value+")");
+					document.getElementById("stuidinfo").innerHTML=display(json); 
+				}
+
+			}
+
+		}
+		
+		xmlhttp.send();
+	}
+	function getcourseid()
+	{
+		if (window.XMLHttpRequest) {// code for IE7+, Firefox, Chrome, Opera, Safari
+			xmlhttp = new XMLHttpRequest();
+		} else {// code for IE6, IE5 
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+
+		xmlhttp.open("get", "getcourseid1.do", false);
+		xmlhttp.onreadystatechange = function() {
+			//alert(xmlhttp.responseText);
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				if (xmlhttp.responseText == null) {
+					alert("no")
+				} else if (xmlhttp.responseText != null) {
+					value=xmlhttp.responseText;
+                 	json=eval("("+value+")");
+					document.getElementById("courseidinfo").innerHTML=display1(json); 
+				}
+
+			}
+
+		}
+		
+		xmlhttp.send();
+	}
+	function display(json)
+	{
+		content = "学号：<select id='stuid' required='required'>";
+		for (i = 0; i < json.length; i++) {
+			content += "<option value='" + json[i].stuid + "'>"+json[i].stuid+"  "+json[i].stuname+"</option>";
+		}
+		 content+="</select><br>";
+		return content;
+	}
+	function display1(json)
+	{
+		content = "课程号：<select id='courseid' required='required' onblur='getratio()'>";
+		for (i = 0; i < json.length; i++) {
+			content += "<option value='" + json[i].courseid + "'>"+json[i].courseid+"  "+json[i].coursename+"</option>";
+		}
+		 content+="</select><br>";
+		return content;
+	}
+	function main(){
+		getcourseid();
+		getstuid();
+		getmarkid()
+
+	}
+
+	
+
+	window.onload=function(){main()}
+
+</script>
+</head>
+<body background="image/6.jpg"
+	style="background-repeat: no-repeat; background-size: 110% 120%; attachment: fixed; background-size: cover;" >
+	<div id="fixedLayer1" align="center">
+ 
+		<a href="register.html">学生注册</a><br>
+
+	   <a href="teacherregister.html">老师注册</a><br>
+
+		<a href="courseregister.html">课程录入</a><br>
+	 
+		<a href="stumarkinforegister.html">成绩录入</a><br>
+		<a href="studentmanager.html">学生管理</a><br>
+
+	   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+		<a href="teachermanager.html">老师管理</a><br>
+	 
+		<a href="coursemanager.html">课程管理</a><br>
+
+	 <a href="javascript:scroll(0,0)">Top</a> 
+
+   </div>
+   <div id="fixedLayer2" align="center">
+
+	<a href="register.html">学生注册</a><br>
+
+   <a href="teacherregister.html">老师注册</a><br>
+
+	<a href="courseregister.html">课程录入</a><br>
+ 
+	<a href="stumarkinforegister.html">成绩录入</a><br>
+	<a href="studentmanager.html">学生管理</a><br>
+
+   <a href="studentmarkinfomanager.html">成绩管理</a><br>
+
+	<a href="teachermanager.html">老师管理</a><br>
+ 
+	<a href="coursemanager.html">课程管理</a><br>
+
+ <a href="javascript:scroll(0,0)">Top</a> 
+
+</div>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<h1 align="center">
+		学生成绩录入<br>
+		 成绩号:<input type="text" id="markid" required="required">
+			<div id="stuidinfo"></div>
+			<div id="courseidinfo"></div>
+		平时分:<input type="text" id="basescore" required="required"><br>
+		期末分:<input type="text" id="testscore" required="required"><br>
+		平时分所占比例:<input type="text" id="ratio" readonly value=""><br>
+		录入日期:<input type="date" id="adddate" required="required"><br>
+		说明:<input type="text" id="note" value="I'm a good student"><br>
+		<button onclick="stumarkinforegister()">学生成绩录入</button>
+
+		<br>
+
+
+		</form>
+		<a href="login.html">返回首页</a>
+</body>
+</html>

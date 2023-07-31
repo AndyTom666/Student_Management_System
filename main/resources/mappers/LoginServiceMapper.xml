@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanzhuang.mapper.LoginServiceMapper">
+	
+      <insert id="saveLogin"  parameterType="Login" useGeneratedKeys="false" keyProperty="stuid">
+		insert into login(stuid,pwd,role,stustate)values(#{stuid},#{pwd},#{role},#{stustate})
+	  </insert>
+	  
+	  <select id="login" parameterType="String" resultType="Login">
+	    select * from login where stuid=#{stuid}
+	  </select>
+
+	  <resultMap type="Button" id="buttonMap">
+	  	<result property="name" column="name"/>
+	  	<result property="type" column="type"/>
+	  	<result property="key" column="key"/>
+	  	<result property="url" column="url"/>
+	  	<result property="media_id" column="media_id"/>
+	  <collection property="sub_button" ofType="Button">
+	  	<result property="name" column="sname"/>
+	  	<result property="type" column="stype"/>
+	  	<result property="key" column="skey"/>
+	  	<result property="url" column="surl"/>
+	  	<result property="media_id" column="smedia_id"/>
+	  </collection>
+	  </resultMap>
+
+	  <select id="getButtons" resultMap="buttonMap">
+	  	select menu.name,menu.type,menu.key,menu.url,menu.media_id,button.name as sname,
+	  	button.type as stype,button.key as skey,button.url as surl,button.media_id as smeida_id from
+		(select * from button where pid=0)as menu left outer join button on menu.id=button.pid;
+	  </select>
+	  <select id="getMenu" resultType="Button">
+	  	select *from button;
+	  </select>
+
+	<!--  select * from userinfo where userID=? and pwd=?  -->
+
+
+
+</mapper>

@@ -7,12 +7,14 @@ public class test54 {
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(4);
         nf.setMinimumFractionDigits(2);
-        String a = "3.1415926";
-        String b = "2";
-        nf.format(a);
-        nf.format(b);
-        System.out.println(a);
-        System.out.println(b);
 
+        double numA = Double.parseDouble("3.1415926");
+        double numB = Double.parseDouble("2");
+
+        String formattedA = nf.format(numA);
+        String formattedB = nf.format(numB);
+
+        System.out.println(formattedA);
+        System.out.println(formattedB);
     }
 }

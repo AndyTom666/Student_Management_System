@@ -22,8 +22,8 @@ import com.aliyuncs.profile.DefaultProfile;
         request.setVersion("2017-05-25");
         request.setAction("SendSms");
         request.putQueryParameter("RegionId", "cn-hangzhou");
-        request.putQueryParameter("PhoneNumbers", "18013976186");
-        request.putQueryParameter("SignName", "98飞翔的zz");
+        request.putQueryParameter("PhoneNumbers", "1**");
+        request.putQueryParameter("SignName", "98**z");
         request.putQueryParameter("TemplateCode", "SMS_172601251");
         request.putQueryParameter("TemplateParam", "{\"code\":\"3845\"}");
         try {
@@ -39,7 +39,7 @@ import com.aliyuncs.profile.DefaultProfile;
 public class SendSms {
     public static void main(String[] args) {
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", 
-        		"LTAIK53mK811W2Ho", "r75IJjRnvdyUvcVzSo5hNTcysHHDNY");//自己的accessKeyId 自己的accessSecret
+        		"**o", "r**Y");//自己的accessKeyId 自己的accessSecret
         IAcsClient client = new DefaultAcsClient(profile);
         int verificationcode=(int)((Math.random()*9+1)*1000);
         CommonRequest request = new CommonRequest();
